@@ -1001,7 +1001,7 @@ uint256 WantedByOrphan(const CBlock* pblockOrphan)
 int64_t GetProofOfWorkReward(int64_t nFees)
 {
     
-            int64_t nSubsidy = 42 * COIN;
+            int64_t nSubsidy = 12 * COIN;
 
             if(nBestHeight == 0)
             {
@@ -1015,14 +1015,38 @@ int64_t GetProofOfWorkReward(int64_t nFees)
 }
 
 // miner's coin stake reward based on coin age spent (coin-days)
+const int YEARLY_BLOCKCOUNT = 131400; //131400 block will execute with in 6months
 int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
 {
-    int64_t nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8);
+    /*int64_t nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8);
 
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRId64"\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
 
-    return nSubsidy + nFees;
+    return nSubsidy + nFees;*/
+    int64_t nRewardCoinYear = COIN_YEAR_REWARD; //10% reward up to end
+
+        printf("Block Number %d \n",nBestHeight);
+
+            if(nBestHeight < YEARLY_BLOCKCOUNT)
+        	    nRewardCoinYear = 6 * COIN_YEAR_REWARD; //60% reward for 131400 blocks
+        	else if(nBestHeight < (2 * YEARLY_BLOCKCOUNT))
+        	    nRewardCoinYear = 5 * COIN_YEAR_REWARD; //50% reward for 131400 * 2 blocks
+        	else if(nBestHeight < (3 * YEARLY_BLOCKCOUNT))
+        	    nRewardCoinYear = 4 * COIN_YEAR_REWARD; //40% reward for 131400 * 3 blocks
+        	else if(nBestHeight < (4 * YEARLY_BLOCKCOUNT))
+        	    nRewardCoinYear = 3 * COIN_YEAR_REWARD; //30% reward for 131400 * 4 blocks
+        	else if(nBestHeight < (5 * YEARLY_BLOCKCOUNT))
+                nRewardCoinYear = 2 * COIN_YEAR_REWARD; //20% reward for 131400 * 5 blocks
+
+        int64_t nSubsidy = nCoinAge * nRewardCoinYear * 33 / (365 * 33 + 8);
+        printf("coin-Subsidy %d\n",nSubsidy);
+        printf("coin-Age %d\n",nCoinAge);
+        printf("Coin Reward %d\n",nRewardCoinYear);
+        if (fDebug && GetBoolArg("-printcreation"))
+            printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRId64"\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
+
+        return nSubsidy + nFees;
 }
 
 static const int64_t nTargetTimespan = 16 * 60;  // 16 mins
