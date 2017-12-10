@@ -1,0 +1,9 @@
+Building VOPCoin
+
+See doc/readme-qt.rst for instructions on building VOPCoin QT,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of VOPCoin.
+
+See doc/build-*.txt for instructions on building vopcoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of VOPCoin.
